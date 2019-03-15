@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace TerrainForm_SharpDX_12
@@ -14,9 +11,22 @@ namespace TerrainForm_SharpDX_12
         [STAThread]
         static void Main()
         {
-            Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Form1());
+            var form = new Form1();
+            Boolean b = form.Initialize();
+
+            if (b == false)
+            {
+                MessageBox.Show("无法启动Direct3D", "错误");
+                return;
+            }
+
+            //如果初始化成功，则显示窗体
+            form.Show();
+            while (form.Created)
+            {
+                form.Render();
+                Application.DoEvents();
+            }
         }
     }
 }
