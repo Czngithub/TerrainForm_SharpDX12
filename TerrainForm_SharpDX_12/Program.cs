@@ -11,9 +11,15 @@ namespace TerrainForm_SharpDX_12
         [STAThread]
         static void Main()
         {
-            var form = new Form1();
-            Boolean b = form.Initialize();
+            var form = new SharpDX.Windows.RenderForm("地形")
+            {
+                Width = 1280,
+                Height = 800
 
+            };
+            var app = new Form1();
+
+            Boolean b = app.Initialize(form);
             if (b == false)
             {
                 MessageBox.Show("无法启动Direct3D", "错误");
@@ -24,7 +30,7 @@ namespace TerrainForm_SharpDX_12
             form.Show();
             while (form.Created)
             {
-                form.Render();
+                app.Render();
                 Application.DoEvents();
             }
         }

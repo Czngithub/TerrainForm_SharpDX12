@@ -10,9 +10,9 @@ namespace TextureLoader
 {
     using SharpDX.Direct3D12;
     /// <summary>
-    /// DDS文件的自定义加载程序
+    /// Custom Loader for DDS files
     /// </summary>
-    public class TextureUtilities
+    public class TextureLoader
     {
 
         const int DDS_MAGIC = 0x20534444;// "DDS "
@@ -231,7 +231,7 @@ namespace TextureLoader
 
 
         //--------------------------------------------------------------------------------------
-        // 获取特定格式的表面信息
+        // Get surface information for a particular format
         //--------------------------------------------------------------------------------------
         static void GetSurfaceInfo(int width, int height, Format fmt, out int outNumBytes, out int outRowBytes, out int outNumRows)
         {
@@ -332,7 +332,7 @@ namespace TextureLoader
 
             if ((ddpf.flags & DDS_RGB) > 0)
             {
-                //注意sRGB格式是使用“DX10”扩展头编写的
+                // Note that sRGB formats are written using the "DX10" extended header
 
                 switch (ddpf.RGBBitCount)
                 {
@@ -352,13 +352,14 @@ namespace TextureLoader
                             return Format.B8G8R8X8_UNorm;
                         }
 
-                        //没有DXGI格式映射到ISBITMASK(0x000000ff, 0x0000ff00, 0x00ff0000, 0x00000000)，即D3DFMT_X8B8G8R8
+                        // No DXGI format maps to ISBITMASK(0x000000ff, 0x0000ff00, 0x00ff0000, 0x00000000) aka D3DFMT_X8B8G8R8
 
-                        // 注意，许多常见的DDS reader/writers (包括 D3DX) 将红色/蓝色
-                        // 替换为 10:10:10:2 格式. 我们假设下面使用的是 'backwards'
-                        //头掩码 因为它很可能是由D3DX编写的,更有效的解决方案是使用
-                        //'DX10'头扩展并直接指定DXGI_FORMAT_R10G10B10A2_UNORM格式
-                        
+                        // Note that many common DDS reader/writers (including D3DX) swap the
+                        // the RED/BLUE masks for 10:10:10:2 formats. We assumme
+                        // below that the 'backwards' header mask is being used since it is most
+                        // likely written by D3DX. The more robust solution is to use the 'DX10'
+                        // header extension and specify the DXGI_FORMAT_R10G10B10A2_UNORM format directly
+
                         // For 'correct' writers, this should be 0x000003ff, 0x000ffc00, 0x3ff00000 for RGB data
                         if (ISBITMASK(ddpf, 0x3ff00000, 0x000ffc00, 0x000003ff, 0xc0000000))
                         {
@@ -718,7 +719,7 @@ namespace TextureLoader
         }
 
         /// <summary>
-        /// 从内存中加载纹理
+        /// Load Texture from memory
         /// </summary>
         /// <param name="device">Device manager</param>
         /// <param name="data">Data</param>
@@ -773,7 +774,7 @@ namespace TextureLoader
         }
 
         /// <summary>
-        /// 从DDS文件加载纹理
+        /// Load texture from DDS file
         /// </summary>
         /// <param name="device">Device</param>
         /// <param name="filename">Filename</param>
